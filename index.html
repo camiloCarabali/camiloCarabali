@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juan García — Dev Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #21262d;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --green:     #39d353;
+      --cyan:      #79c0ff;
+      --yellow:    #e3b341;
+      --pink:      #f78166;
+      --accent:    #58a6ff;
+      --purple:    #d2a8ff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    nav .logo { color: var(--green); font-weight: 700; font-size: 14px; margin-right: auto; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--cyan); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ── WINDOW ── */
+    .window {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .titlebar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .win-title { margin: 0 auto; font-size: 12px; color: var(--muted); }
+    .content { padding: 1.5rem 1.75rem; }
+
+    /* ── TERMINAL LINES ── */
+    .prompt { color: var(--green); font-weight: 700; }
+    .path   { color: var(--cyan); }
+    .cmd    { color: var(--text); }
+    .output { margin: 8px 0 20px; }
+
+    /* ── SECTION TITLE ── */
+    .sec {
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec::before { content: '#'; color: var(--pink); }
+
+    /* ── ABOUT ── */
+    .about-row { display: flex; gap: 8px; font-size: 13px; margin: 3px 0; }
+    .about-key { color: var(--yellow); width: 80px; flex-shrink: 0; }
+    .status { color: var(--green); }
+
+    /* ── EXPERIENCE ── */
+    .job {
+      border-left: 2px solid var(--border);
+      padding-left: 16px;
+      margin-bottom: 18px;
+      transition: border-color .2s;
+    }
+    .job:hover { border-color: var(--accent); }
+    .job-title   { color: var(--accent); font-weight: 700; font-size: 13px; }
+    .job-company { color: var(--green); font-size: 12px; }
+    .job-date    { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+    .job-desc    { color: var(--text); font-size: 12px; }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      transition: border-color .25s, transform .2s;
+      cursor: default;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .project-icon { font-size: 22px; margin-bottom: 8px; }
+    .project-name { color: var(--accent); font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+    .project-badge {
+      display: inline-block;
+      background: #1a2a1a;
+      border: 1px solid #1a3a1a;
+      color: var(--green);
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .project-desc { color: var(--muted); font-size: 11px; margin-bottom: 10px; line-height: 1.6; }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--border);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .tag-cyan   { color: var(--cyan);   border-color: #0d2a3a; background: #0a1f2e; }
+    .tag-yellow { color: var(--yellow); border-color: #3a2e00; background: #1a1500; }
+    .tag-purple { color: var(--purple); border-color: #2a1a3a; background: #160a22; }
+    .tag-green  { color: var(--green);  border-color: #1a3a1a; background: #0a1a0a; }
+    .tag-pink   { color: var(--pink);   border-color: #3a1a1a; background: #1a0a0a; }
+
+    /* ── SKILLS ── */
+    .skill-group { margin-bottom: 18px; }
+    .skill-group-title { color: var(--pink); font-size: 11px; margin-bottom: 8px; letter-spacing: .08em; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
+    .bar-label { color: var(--text); width: 100px; font-size: 12px; flex-shrink: 0; }
+    .bar-track { flex: 1; background: var(--surface2); border-radius: 2px; height: 5px; overflow: hidden; }
+    .bar-fill  { height: 100%; border-radius: 2px; background: var(--green); }
+    .bar-pct   { color: var(--muted); font-size: 11px; width: 32px; text-align: right; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--cyan);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-key { color: var(--yellow); width: 80px; flex-shrink: 0; }
+    .contact-val { color: var(--cyan); }
+    .contact-val a { color: var(--cyan); text-decoration: none; }
+    .contact-val a:hover { color: var(--accent); text-decoration: underline; }
+
+    /* ── CURSOR ── */
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 3rem 0 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .hero-tag { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .hero-name {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .hero-name span { color: var(--green); }
+    .hero-role { color: var(--muted); font-size: 14px; margin-bottom: 1.5rem; }
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 8px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #0d1117;
+      border: 1px solid var(--green);
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: #2ebd47; }
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--cyan); }
+
+    /* ── SCROLL ANIMATION ── */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s, transform .5s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 2rem 0 1rem;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--green); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">juan@dev:~$</span>
+  <a href="#about">about</a>
+  <a href="#experience">experience</a>
+  <a href="#projects">projects</a>
+  <a href="#skills">skills</a>
+  <a href="#certifications">certs</a>
+  <a href="#contact">contact</a>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <p class="hero-tag">// systems engineer &amp; fullstack developer</p>
+    <h1 class="hero-name">Juan Camilo <span>Carabali Caracas</span></h1>
+    <p class="hero-role">Backend · Cloud · Enterprise Integrations · Cali, Colombia 🇨🇴</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-primary">./contactar</a>
+      <a href="#projects" class="btn btn-outline">ls projects/</a>
+      <a href="https://github.com/camiloCarabali" target="_blank" class="btn btn-outline">GitHub ↗</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">whoami.sh</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ ./whoami.sh</span></div>
+        <div class="output">
+          <div class="sec">sobre mí</div>
+          <div class="about-row"><span class="about-key">nombre</span><span>Juan Camilo Carabali Caracas</span></div>
+          <div class="about-row"><span class="about-key">rol</span><span>Systems Engineer · Fullstack Developer</span></div>
+          <div class="about-row"><span class="about-key">ubicación</span><span>Cali, Colombia</span></div>
+          <div class="about-row"><span class="about-key">experiencia</span><span>+3 años en backend, cloud e integraciones</span></div>
+          <div class="about-row"><span class="about-key">educación</span><span>Ingeniería de Sistemas — USB Cali</span></div>
+          <div class="about-row"><span class="about-key">estado</span><span class="status">● disponible para proyectos</span></div>
+          <br>
+          <div style="color:var(--muted);font-size:12px;line-height:1.8;border-left:2px solid var(--border);padding-left:14px">
+            Desarrollo aplicaciones propias por diversión y aprendizaje. Me apasionan los sistemas distribuidos,
+            las integraciones enterprise y crear herramientas útiles para comunidades. Actualmente construyendo
+            Codex, una plataforma de guías y herramientas para la comunidad de Dofus.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">cat experience.log</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ cat experience.log</span></div>
+        <div class="output">
+          <div class="sec">experiencia</div>
+
+          <div class="job">
+            <div class="job-title">Support Engineer</div>
+            <div class="job-company">GNS</div>
+            <div class="job-date">2024 – presente</div>
+            <div class="job-desc">
+              Soporte técnico de plataformas cloud, diagnóstico de incidentes y
+              acompañamiento a clientes enterprise en integraciones de comunicaciones.
+            </div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">Cloud Development Engineer</div>
+            <div class="job-company">GNS</div>
+            <div class="job-date">2023 – 2024</div>
+            <div class="job-desc">
+              Desarrollo sobre Genesys Cloud, integraciones enterprise a gran escala,
+              soporte y automatización en AWS, y gestión de flujos de trabajo en la nube.
+            </div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">Backend Developer</div>
+            <div class="job-company">Grupo SAI S.A.S</div>
+            <div class="job-date">2023</div>
+            <div class="job-desc">
+              Construcción de APIs REST con FastAPI y PostgreSQL, arquitectura de
+              microservicios y optimización de consultas para sistemas de gestión empresarial.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">ls -la projects/</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ ls -la projects/</span></div>
+        <div class="output">
+          <div class="sec">proyectos</div>
+          <div class="projects-grid">
+
+            <div class="project-card">
+              <div class="project-icon">🚛</div>
+              <div class="project-name">Linds</div>
+              <div class="project-badge">tesis de grado</div>
+              <div class="project-desc">
+                Plataforma para contratar camiones de carga directamente, sin intermediarios.
+                Conecta empresas con transportistas de forma simple y transparente.
+              </div>
+              <div class="tags">
+                <span class="tag tag-cyan">FastAPI</span>
+                <span class="tag tag-green">PostgreSQL</span>
+                <span class="tag tag-yellow">AWS</span>
+                <span class="tag tag-purple">Docker</span>
+                <span class="tag tag-cyan">Python</span>
+                <span class="tag tag-pink">Ionic</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-icon">📖</div>
+              <div class="project-name">Lectora</div>
+              <div class="project-badge">web app</div>
+              <div class="project-desc">
+                Plataforma de lectura online con modo audiolibro integrado. Lee PDFs
+                en voz alta usando síntesis de texto a voz, como si fuera un podcast.
+              </div>
+              <div class="tags">
+                <span class="tag tag-cyan">FastAPI</span>
+                <span class="tag tag-green">PostgreSQL</span>
+                <span class="tag tag-cyan">Python</span>
+                <span class="tag tag-pink">Angular</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-icon">⚔️</div>
+              <div class="project-name">Codex</div>
+              <div class="project-badge">en desarrollo</div>
+              <div class="project-desc">
+                App y canal de YouTube para la comunidad de Dofus. Reúne guías del canal,
+                seguimiento de contenido y herramientas para jugadores.
+              </div>
+              <div class="tags">
+                <span class="tag tag-cyan">FastAPI</span>
+                <span class="tag tag-green">PostgreSQL</span>
+                <span class="tag tag-cyan">Python</span>
+                <span class="tag tag-pink">Ionic</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">skills --verbose</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ skills --verbose</span></div>
+        <div class="output">
+          <div class="sec">skills</div>
+
+          <div class="skill-group">
+            <div class="skill-group-title">// backend</div>
+            <div class="bar-row"><span class="bar-label">Python</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="bar-pct">90%</span></div>
+            <div class="bar-row"><span class="bar-label">FastAPI</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span class="bar-pct">88%</span></div>
+            <div class="bar-row"><span class="bar-label">PostgreSQL</span><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="bar-pct">82%</span></div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title">// cloud &amp; devops</div>
+            <div class="bar-row"><span class="bar-label">AWS</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-pct">78%</span></div>
+            <div class="bar-row"><span class="bar-label">Docker</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="bar-pct">75%</span></div>
+            <div class="bar-row"><span class="bar-label">Genesys Cloud</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><span class="bar-pct">85%</span></div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-title">// frontend</div>
+            <div class="bar-row"><span class="bar-label">Angular</span><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><span class="bar-pct">70%</span></div>
+            <div class="bar-row"><span class="bar-label">Ionic</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-pct">72%</span></div>
+          </div>
+
+          <div class="chips">
+            <span class="chip">Git</span>
+            <span class="chip">REST APIs</span>
+            <span class="chip">Microservices</span>
+            <span class="chip">Linux</span>
+            <span class="chip">CI/CD</span>
+            <span class="chip">OAuth2</span>
+            <span class="chip">WebSockets</span>
+            <span class="chip">SQLAlchemy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">cat certifications.log</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ cat certifications.log</span></div>
+        <div class="output">
+          <div class="sec">licencias y certificaciones</div>
+
+          <div class="job">
+            <div class="job-title">Genesys Cloud: Professional Certification</div>
+            <div class="job-company">Genesys</div>
+            <div class="job-date">may. 2026 · Vence: may. 2028</div>
+            <div class="job-desc"><a href="https://www.credly.com/badges/0eebcf59-3e8b-4dac-83fa-4687a30555d8/linked_in_profile" target="_blank" style="color:var(--cyan)">Ver credencial ↗</a></div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">AWS Educate Introduction to Generative AI</div>
+            <div class="job-company">Amazon Web Services (AWS)</div>
+            <div class="job-date">mar. 2025</div>
+            <div class="job-desc"><a href="https://www.credly.com/badges/260e2183-2efd-4ab6-86be-7bef05809bdb/linked_in_profile" target="_blank" style="color:var(--cyan)">Ver credencial ↗</a></div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">Ciber Profesionales</div>
+            <div class="job-company">Cyberbit</div>
+            <div class="job-date">feb. 2024</div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">AWS Academy Graduate – Machine Learning Foundations</div>
+            <div class="job-company">Amazon Web Services (AWS)</div>
+            <div class="job-date">abr. 2023</div>
+            <div class="job-desc"><a href="https://www.credly.com/go/6qPW40IS" target="_blank" style="color:var(--cyan)">Ver credencial ↗</a></div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">AWS Academy Graduate – Cloud Foundations</div>
+            <div class="job-company">Amazon Web Services (AWS)</div>
+            <div class="job-date">sept. 2022</div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">Inglés A2</div>
+            <div class="job-company">Learn English</div>
+            <div class="job-date">—</div>
+          </div>
+
+          <div class="job">
+            <div class="job-title">Fundamentos de Redes de Datos</div>
+            <div class="job-company">SENA</div>
+            <div class="job-date">jun. 2017 · ID: 9227001449365CC1107530632C</div>
+          </div>
+
+          <div class="job" style="margin-bottom:0">
+            <div class="job-title">Desarrollo de Habilidades Cognitivas para el Pensamiento Lógico-Matemático</div>
+            <div class="job-company">SENA</div>
+            <div class="job-date">jul. 2018 · ID: 9227001699494CC1107530632C</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="reveal">
+    <div class="window">
+      <div class="titlebar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="win-title">contact --info</span>
+      </div>
+      <div class="content">
+        <div><span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ contact --info</span></div>
+        <div class="output">
+          <div class="sec">contacto</div>
+          <div class="contact-row">
+            <span class="contact-key">email</span>
+            <span class="contact-val"><a href="mailto:carabalijuancamilo@gmail.com">carabalijuancamilo@gmail.com</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-key">github</span>
+            <span class="contact-val"><a href="https://github.com/camiloCarabali" target="_blank">github.com/camiloCarabali</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-key">linkedin</span>
+            <span class="contact-val"><a href="https://linkedin.com/in/juan-camilo-carabali-caracas" target="_blank">linkedin.com/in/juan-camilo-carabali-caracas</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-key">youtube</span>
+            <span class="contact-val"><a href="https://youtube.com/@Codex-App" target="_blank">youtube.com/@Codex-App</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-key">location</span>
+            <span class="contact-val">Cali, Colombia 🇨🇴</span>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <span class="prompt">juan@dev</span><span class="path"> ~/portfolio</span> <span class="cmd">$ </span><span class="cursor"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>built with <span>♥</span> &amp; JetBrains Mono — Juan Camilo Carabali Caracas © 2025</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
